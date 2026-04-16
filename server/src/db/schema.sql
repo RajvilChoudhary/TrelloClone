@@ -2,8 +2,8 @@
 -- TRELLO CLONE DATABASE SCHEMA
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS trello_clone;
-USE trello_clone;
+-- CREATE DATABASE IF NOT EXISTS trello_clone;
+-- USE trello_clone;
 
 -- ============================================================
 -- USERS

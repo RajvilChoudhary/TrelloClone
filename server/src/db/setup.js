@@ -18,8 +18,10 @@ async function setup() {
     // First connect without a database to run CREATE DATABASE
     connection = await mysql.createConnection({
       host:     process.env.DB_HOST,
+      port:     process.env.DB_PORT || 3306,
       user:     process.env.DB_USER,
       password: process.env.DB_PASSWORD,
+      ssl:      process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : null,
     });
     console.log('✅ Connected to MySQL');
 
@@ -31,9 +33,11 @@ async function setup() {
     // Reconnect with the target database
     connection = await mysql.createConnection({
       host:     process.env.DB_HOST,
+      port:     process.env.DB_PORT || 3306,
       user:     process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      ssl:      process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : null,
     });
 
     const schemaSQL = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');

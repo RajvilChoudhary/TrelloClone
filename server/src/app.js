@@ -34,11 +34,9 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }
 const clientDistPath = path.join(__dirname, '../../client/dist');
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
-  // Handle SPA routing
-  app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
-      res.sendFile(path.join(clientDistPath, 'index.html'));
-    }
+  // Handle SPA routing for Express 5
+  app.get(/^(?!\/(api|uploads)).*$/, (req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
   });
 }
 
