@@ -2,6 +2,10 @@
 
 A full-stack Kanban project management app that closely replicates Trello's UI/UX built with React, Node.js/Express, and MySQL.
 
+## 🚀 Live Demo
+- **Frontend (Vercel)**: [trello-clone-two-rose.vercel.app](https://trello-clone-two-rose.vercel.app/)
+- **Backend (Render)**: [trello-backend-uf9n.onrender.com](https://trello-backend-uf9n.onrender.com/)
+
 ---
 
 ## Tech Stack
