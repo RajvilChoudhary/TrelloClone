@@ -1,0 +1,48 @@
+.card-item {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  margin: 0 4px 6px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  overflow: hidden;
+}
+.card-item:hover { background: var(--bg-card-hover); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.card-item.card-completed { opacity: 0.6; }
+.card-item.card-completed:hover { opacity: 0.85; }
+
+.card-cover { width: 100%; height: 36px; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.card-body { padding: 8px 10px; }
+.card-labels { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+
+.card-complete-btn {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  margin-top: 1px;
+  transition: color var(--transition), transform var(--transition);
+  opacity: 0;
+}
+.card-item:hover .card-complete-btn { opacity: 1; }
+.card-complete-btn:hover { color: var(--btn-success); transform: scale(1.15); }
+.card-complete-btn.is-complete { color: var(--btn-success); opacity: 1; }
+
+.card-title {
+  font-size: 13.5px; color: var(--text-heading);
+  line-height: 1.4; word-break: break-word;
+}
+.card-title-done {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.card-badges {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 5px; margin-top: 6px;
+}
+.card-badges .badge { font-size: 11px; padding: 2px 5px; }
+.badge-done { background: var(--btn-success) !important; color: #0a2e1a !important; }
+.card-members { display: flex; margin-left: auto; }
+.card-members .avatar { margin-left: -4px; border: 1.5px solid var(--bg-card); }

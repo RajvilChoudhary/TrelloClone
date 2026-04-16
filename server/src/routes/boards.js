@@ -1,0 +1,14 @@
+const router = require('express').Router();
+const c = require('../controllers/boardController');
+router.get('/',              c.getAllBoards);
+router.post('/',             c.createBoard);
+router.get('/:id',           c.getBoardById);
+router.put('/:id',           c.updateBoard);
+router.delete('/:id',        c.deleteBoard);
+router.get('/:id/members',   c.getBoardMembers);
+router.get('/:id/cards/search', c.searchCards);
+router.get('/:id/cards/filter', c.filterCards);
+const lc = require('../controllers/labelController');
+router.get('/:id/labels',         lc.getBoardLabels);
+router.post('/:id/labels',        lc.createLabel);
+module.exports = router;

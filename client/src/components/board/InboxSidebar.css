@@ -1,0 +1,116 @@
+.inbox-sidebar {
+  display: flex;
+  flex-direction: column;
+  background: rgba(23, 43, 77, 0.9); /* Deep blue dark shade */
+  border-right: 1px solid var(--border-subtle);
+  height: 100%;
+  backdrop-filter: blur(8px);
+}
+
+.inbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 2px solid rgba(255,255,255,0.06);
+}
+
+.inbox-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+}
+
+.inbox-title h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.inbox-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inbox-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inbox-add-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: all var(--transition);
+}
+
+.inbox-add-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.inbox-add-form {
+  background: rgba(0,0,0,0.3);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+}
+
+.inbox-cards-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 100px; /* target for drop */
+  transition: background var(--transition);
+  border-radius: var(--radius-sm);
+}
+
+.inbox-cards-list.drag-over {
+  background: rgba(255,255,255,0.04);
+}
+
+.inbox-card-item {
+  background: rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  cursor: pointer;
+  transition: transform var(--transition), background var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inbox-card-item:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.inbox-card-item.dragging {
+  opacity: 0.8;
+  transform: rotate(2deg) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.inbox-card-title {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.inbox-card-meta {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

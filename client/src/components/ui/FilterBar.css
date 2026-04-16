@@ -1,0 +1,23 @@
+.filter-bar {
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 16px;
+  flex-shrink: 0;
+  animation: fadeIn 0.15s ease;
+}
+.filter-bar-inner {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.filter-group {
+  display: flex; align-items: center; gap: 8px;
+}
+.filter-group-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  color: rgba(255,255,255,0.7); letter-spacing: 0.06em; white-space: nowrap;
+}
+.filter-chips { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.filter-chip { border: 2px solid transparent; cursor: pointer; }
+.filter-chip.selected { border-color: white; }
+.filter-member { border: 2px solid transparent; transition: opacity var(--transition), border-color var(--transition); }
+.filter-member.selected { border-color: white; opacity: 1 !important; }

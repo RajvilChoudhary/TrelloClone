@@ -1,0 +1,55 @@
+const express  = require('express');
+const cors     = require('cors');
+const path     = require('path');
+const fs       = require('fs');
+require('dotenv').config();
+
+const app = express();
+
+// Middleware
+app.use(cors({ origin: true, credentials: true })); // origin: true allows any requesting origin
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded files
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+app.use('/uploads', express.static(uploadsDir));
+
+// Routes
+app.use('/api/boards',          require('./routes/boards'));
+app.use('/api/lists',           require('./routes/lists'));
+app.use('/api/cards',           require('./routes/cards'));
+app.use('/api/labels',          require('./routes/labels'));
+app.use('/api/checklists',      require('./routes/checklists'));
+app.use('/api/checklist-items', require('./routes/checklistItems'));
+app.use('/api/comments',        require('./routes/comments'));
+app.use('/api/attachments',     require('./routes/attachments'));
+app.use('/api/members',         require('./routes/members'));
+
+// Health check
+app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
+
+// PRODUCTION: Serve static frontend
+const clientDistPath = path.join(__dirname, '../../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  // Handle SPA routing
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
+      res.sendFile(path.join(clientDistPath, 'index.html'));
+    }
+  });
+}
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: err.message || 'Internal server error' });
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📡 URL: http://localhost:${PORT}`);
+});
