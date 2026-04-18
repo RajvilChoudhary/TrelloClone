@@ -2,6 +2,7 @@ const express  = require('express');
 const cors     = require('cors');
 const path     = require('path');
 const fs       = require('fs');
+const pool     = require('./config/db');
 require('dotenv').config();
 
 const app = express();
@@ -28,7 +29,14 @@ app.use('/api/attachments',     require('./routes/attachments'));
 app.use('/api/members',         require('./routes/members'));
 
 // Health check
-app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
+app.get('/api/health', async (req, res) => {
+  try {
+    await pool.execute('SELECT 1');
+    res.json({ status: 'ok', db: 'connected', time: new Date() });
+  } catch (err) {
+    res.status(503).json({ status: 'error', db: 'disconnected', error: err.message });
+  }
+});
 
 // PRODUCTION: Serve static frontend
 const clientDistPath = path.join(__dirname, '../../client/dist');
