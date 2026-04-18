@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
-import { getBoards, createBoard, searchCards } from '../../api';
+import { getBoards, createBoard, globalSearch } from '../../api';
 import './Header.css';
 
 const BACKGROUNDS = [
@@ -27,7 +27,7 @@ export default function Header() {
   const [newTitle, setNewTitle]           = useState('');
   const [selectedBg, setSelectedBg]       = useState(BACKGROUNDS[0]);
   const [searchVal, setSearchVal]         = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState({ boards: [], lists: [], cards: [] });
   const [searchLoading, setSearchLoading] = useState(false);
   const [showSearch, setShowSearch]       = useState(false);
 
@@ -68,24 +68,35 @@ export default function Header() {
     setSearchVal(val);
     setShowSearch(true);
     clearTimeout(searchTimer.current);
-    if (!val.trim() || !boardId) { setSearchResults([]); return; }
+    if (!val.trim()) { setSearchResults({ boards: [], lists: [], cards: [] }); return; }
     setSearchLoading(true);
     searchTimer.current = setTimeout(async () => {
       try {
-        const res = await searchCards(boardId, val);
-        setSearchResults(res.data.slice(0, 8));
+        const res = await globalSearch(val);
+        setSearchResults(res.data);
       } catch(e) {
-        setSearchResults([]);
+        setSearchResults({ boards: [], lists: [], cards: [] });
       } finally { setSearchLoading(false); }
     }, 300);
   };
 
-  const handleSearchResultClick = (card) => {
+  const handleResultClick = (type, item) => {
     setShowSearch(false);
     setSearchVal('');
-    setSearchResults([]);
-    // Navigate to the board page with a query param to auto-open the card
-    navigate(`/board/${card.board_id}?openCard=${card.id}`);
+    setSearchResults({ boards: [], lists: [], cards: [] });
+
+    if (type === 'board') {
+      navigate(`/board/${item.id}`);
+    } else if (type === 'list') {
+      // If the list has cards, open the first one; otherwise just go to board
+      if (item.first_card_id) {
+        navigate(`/board/${item.board_id}?openCard=${item.first_card_id}`);
+      } else {
+        navigate(`/board/${item.board_id}`);
+      }
+    } else if (type === 'card') {
+      navigate(`/board/${item.board_id}?openCard=${item.id}`);
+    }
   };
 
   return (
@@ -176,17 +187,68 @@ export default function Header() {
           />
         </div>
         {showSearch && searchVal && (
-          <div className="search-results dropdown-menu" style={{ top: '100%', marginTop: 4, width: '100%' }}>
+          <div className="search-results dropdown-menu" style={{ top: '100%', marginTop: 4, width: '100%', maxHeight: '80vh', overflowY: 'auto' }}>
             {searchLoading ? (
               <div className="dropdown-item" style={{ justifyContent: 'center' }}><div className="spinner" style={{ width: 20, height: 20, borderWidth: 2 }}></div></div>
-            ) : searchResults.length === 0 ? (
-              <div className="dropdown-item" style={{ color: 'var(--text-muted)' }}>No cards found</div>
-            ) : searchResults.map(card => (
-              <div key={card.id} className="dropdown-item" onClick={() => handleSearchResultClick(card)} style={{ cursor: 'pointer' }}>
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="14" height="4" rx="1"/><rect x="1" y="7" width="10" height="4" rx="1"/><rect x="1" y="13" width="12" height="2" rx="1"/></svg>
-                <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.title}</span>
-              </div>
-            ))}
+            ) : (searchResults.boards.length === 0 && searchResults.lists.length === 0 && searchResults.cards.length === 0) ? (
+              <div className="dropdown-item" style={{ color: 'var(--text-muted)' }}>No results found</div>
+            ) : (
+              <>
+                {searchResults.boards.length > 0 && (
+                  <>
+                    <div className="dropdown-header">Boards</div>
+                    {searchResults.boards.map(board => (
+                      <div key={`b-${board.id}`} className="dropdown-item result-item" onClick={() => handleResultClick('board', board)}>
+                        <div className="result-thumb" style={{ background: board.background }}></div>
+                        <div className="result-info">
+                          <div className="result-title truncate">{board.title}</div>
+                          <div className="result-sub">Trello Workspace</div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {searchResults.lists.length > 0 && (
+                  <>
+                    <div className="dropdown-header">Lists</div>
+                    {searchResults.lists.map(list => (
+                      <div key={`l-${list.id}`} className="dropdown-item result-item" onClick={() => handleResultClick('list', list)}>
+                        <div className="result-icon-box pink">
+                          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="12" rx="1" fill="none" stroke="currentColor" strokeWidth="2"/><line x1="1" y1="5" x2="15" y2="5" stroke="currentColor" strokeWidth="2"/></svg>
+                        </div>
+                        <div className="result-info">
+                          <div className="result-title truncate">{list.title}</div>
+                          <div className="result-sub">{list.board_title}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                {searchResults.cards.length > 0 && (
+                  <>
+                    <div className="dropdown-header">Cards</div>
+                    {searchResults.cards.map(card => (
+                      <div key={`c-${card.id}`} className="dropdown-item result-item" onClick={() => handleResultClick('card', card)}>
+                        <div className="result-icon-box blue">
+                          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="14" height="4" rx="1"/><rect x="1" y="7" width="10" height="4" rx="1"/><rect x="1" y="13" width="12" height="2" rx="1"/></svg>
+                        </div>
+                        <div className="result-info">
+                          <div className="result-title truncate">{card.title}</div>
+                          <div className="result-sub">{card.board_title}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+                <div className="dropdown-footer-link" onClick={() => setShowSearch(false)}>
+                   <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.868-3.833ZM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0Z"/></svg>
+                   Advanced search
+                   <span className="shortcut">↵</span>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>

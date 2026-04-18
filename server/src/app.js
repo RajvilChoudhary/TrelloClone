@@ -27,6 +27,7 @@ app.use('/api/checklist-items', require('./routes/checklistItems'));
 app.use('/api/comments',        require('./routes/comments'));
 app.use('/api/attachments',     require('./routes/attachments'));
 app.use('/api/members',         require('./routes/members'));
+app.use('/api/search',          require('./routes/search'));
 
 // Health check
 app.get('/api/health', async (req, res) => {

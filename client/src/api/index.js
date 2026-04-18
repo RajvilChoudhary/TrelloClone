@@ -63,5 +63,6 @@ export const deleteAttachment  = (id) => api.delete(`/attachments/${id}`);
 
 // ===================== MEMBERS =====================
 export const getMembers = () => api.get('/members');
+export const globalSearch = (q) => api.get('/search', { params: { q } });
 
 export default api;
