@@ -156,8 +156,33 @@ export default function CardModal({ card: initialCard, labels: boardLabels, boar
   };
 
   const handleToggleItem = async (itemId, completed) => {
-    await updateChecklistItem(itemId, { completed: completed ? 1 : 0 });
-    await refreshCard();
+    // Optimistic update: flip the bit instantly so the tick stays visible
+    setCard(prev => ({
+      ...prev,
+      checklists: prev.checklists.map(cl => ({
+        ...cl,
+        items: cl.items.map(it =>
+          it.id === itemId ? { ...it, completed: completed ? 1 : 0 } : it
+        ),
+      })),
+    }));
+    // Sync with server in the background
+    try {
+      const res = await updateChecklistItem(itemId, { completed: completed ? 1 : 0 });
+      // Update the specific item with server data
+      setCard(prev => ({
+        ...prev,
+        checklists: prev.checklists.map(cl => ({
+          ...cl,
+          items: cl.items.map(it => it.id === itemId ? res.data : it)
+        }))
+      }));
+      // Optional: Inform parent of the change (though lists don't show individual item completion bits, just counts)
+      onCardUpdated({ ...card, checklists: card.checklists.map(cl => ({ ...cl, items: cl.items.map(it => it.id === itemId ? res.data : it) })) });
+    } catch (err) {
+      console.error('Failed to toggle checklist item:', err);
+      await refreshCard();
+    }
   };
 
   const handleDeleteItem = async (itemId) => {

@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS cards (
   cover_color  VARCHAR(7),
   cover_image  VARCHAR(500),
   due_date     DATETIME,
+  completed    BOOLEAN       NOT NULL DEFAULT 0,
   archived     BOOLEAN       NOT NULL DEFAULT 0,
   created_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (list_id)  REFERENCES lists(id)  ON DELETE CASCADE,

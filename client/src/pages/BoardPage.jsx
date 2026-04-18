@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { getBoard, createList, updateList, reorderList, deleteList, createCard, moveCard, updateBoard } from '../api';
+import { getBoard, createList, updateList, reorderList, deleteList, createCard, updateCard, moveCard, updateBoard } from '../api';
 import ListColumn from '../components/board/ListColumn';
 import CardModal from '../components/card/CardModal';
 import FilterBar from '../components/ui/FilterBar';
@@ -190,7 +190,7 @@ export default function BoardPage() {
       
       const res = await updateCard(cardId, { completed });
       
-      // Sync with server's actual returned object (handles 1/0 consistency)
+      // Merge with server response to keep rich data (checklists, members, labels)
       const synced = (c) => c.id === cardId ? { ...c, ...res.data } : c;
       setLists(prev => prev.map(l => ({ ...l, cards: l.cards.map(synced) })));
       setInboxCards(prev => prev.map(synced));
