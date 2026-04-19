@@ -1,12 +1,93 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
+    <title>Trello To-Do</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+              "secondary-fixed-dim": "#cdd5e2",
+              "on-secondary-fixed-variant": "#545c68",
+              "inverse-on-surface": "#51555a",
+              "tertiary": "#b6a8ff",
+              "primary-container": "#60a1ff",
+              "surface": "#0b0f12",
+              "on-primary": "#002e5e",
+              "surface-dim": "#0b0f12",
+              "inverse-surface": "#f7f9ff",
+              "outline": "#72767b",
+              "on-secondary-fixed": "#38404b",
+              "error-dim": "#d7383b",
+              "on-tertiary-fixed-variant": "#3a2984",
+              "on-primary-fixed": "#000000",
+              "on-secondary-container": "#c9d1de",
+              "tertiary-container": "#a999fa",
+              "primary-dim": "#5a9fff",
+              "on-error": "#490006",
+              "primary-fixed-dim": "#4c94f5",
+              "surface-container": "#151a1f",
+              "on-secondary": "#4a525e",
+              "surface-variant": "#21262c",
+              "on-tertiary-fixed": "#180058",
+              "on-surface": "#f4f7fc",
+              "secondary-fixed": "#dbe3f1",
+              "secondary-container": "#3f4752",
+              "primary": "#7cafff",
+              "inverse-primary": "#005eb5",
+              "outline-variant": "#44484d",
+              "on-surface-variant": "#a8abb0",
+              "on-tertiary": "#34217d",
+              "surface-tint": "#7cafff",
+              "surface-bright": "#272d33",
+              "primary-fixed": "#60a1ff",
+              "surface-container-low": "#0f1418",
+              "on-background": "#f4f7fc",
+              "on-tertiary-container": "#281272",
+              "error": "#ff716c",
+              "surface-container-highest": "#21262c",
+              "surface-container-high": "#1b2025",
+              "surface-container-lowest": "#000000",
+              "error-container": "#9f0519",
+              "tertiary-fixed-dim": "#a696f7",
+              "tertiary-dim": "#a191f1",
+              "on-primary-container": "#002249",
+              "on-error-container": "#ffa8a3",
+              "background": "#0b0f12",
+              "secondary-dim": "#cdd5e2",
+              "on-primary-fixed-variant": "#002c5a",
+              "secondary": "#dbe3f1",
+              "tertiary-fixed": "#b4a5ff"
+            },
+            "borderRadius": {
+              "DEFAULT": "0.125rem",
+              "lg": "0.25rem",
+              "xl": "0.5rem",
+              "full": "0.75rem"
+            },
+            "fontFamily": {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      .ghost-border { border: 1px solid rgba(68, 72, 77, 0.2); }
+    </style>
   </head>
-  <body>
+  <body class="bg-surface text-on-surface selection:bg-primary-container/30">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
