@@ -95,7 +95,7 @@
 
 /* LIST WRAPPER */
 .list-wrapper {
-  flex-shrink: 0; width: 272px;
+  flex-shrink: 0; display: flex; flex-direction: column;
 }
 .list-wrapper.dragging { opacity: 0.85; transform: rotate(1.5deg); }
 

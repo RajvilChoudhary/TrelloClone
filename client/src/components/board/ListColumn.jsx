@@ -4,6 +4,7 @@ import CardItem from './CardItem';
 import './ListColumn.css';
 
 export default function ListColumn({ list, labels, members, dragHandleProps, onUpdateList, onDeleteList, onAddCard, onOpenCard, onToggleCardComplete }) {
+  const [isCollapsed, setIsCollapsed]   = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleVal, setTitleVal]         = useState(list.title);
   const [addingCard, setAddingCard]     = useState(false);
@@ -38,9 +39,24 @@ export default function ListColumn({ list, labels, members, dragHandleProps, onU
   members.forEach(m => memberMap[m.id] = m);
 
   return (
-    <div className="list-column">
-      {/* List Header */}
-      <div className="list-header" {...dragHandleProps}>
+    <div className={`list-column ${isCollapsed ? 'collapsed' : ''}`}>
+      {/* Collapsed View */}
+      {isCollapsed ? (
+        <div className="collapsed-content" {...dragHandleProps} onClick={() => setIsCollapsed(false)}>
+          <button className="icon-btn" onClick={(e) => { e.stopPropagation(); setIsCollapsed(false); }} title="Expand list">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10 12H4 M4 12l3-3 M4 12l3 3 M14 12h6 M20 12l-3-3 M20 12l-3 3" />
+            </svg>
+          </button>
+          <div className="collapsed-text">
+            <span className="collapsed-title">{list.title}</span>
+            <span className="collapsed-count">{list.cards.length}</span>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* List Header */}
+          <div className="list-header" {...dragHandleProps}>
         {editingTitle ? (
           <input
             className="list-title-input"
@@ -56,9 +72,15 @@ export default function ListColumn({ list, labels, members, dragHandleProps, onU
             {list.title}
           </h3>
         )}
-        <div style={{ position: 'relative' }} ref={menuRef}>
-          <button
-            className="icon-btn"
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <button className="icon-btn" onClick={() => setIsCollapsed(true)} title="Collapse list">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12h6 M10 12l-3-3 M10 12l-3 3 M20 12h-6 M14 12l3-3 M14 12l3 3" />
+            </svg>
+          </button>
+          <div style={{ position: 'relative' }} ref={menuRef}>
+            <button
+              className="icon-btn"
             onClick={() => { setShowMenu(v => !v); setConfirmingDelete(false); }}
             id={`list-menu-${list.id}`}
           >
@@ -97,6 +119,7 @@ export default function ListColumn({ list, labels, members, dragHandleProps, onU
               )}
             </div>
           )}
+        </div>
         </div>
       </div>
 
@@ -160,6 +183,8 @@ export default function ListColumn({ list, labels, members, dragHandleProps, onU
           </svg>
           Add a card
         </button>
+      )}
+        </>
       )}
     </div>
   );
